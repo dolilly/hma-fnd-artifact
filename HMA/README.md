@@ -1,7 +1,7 @@
-# HMA: Hardness-aware Fine-grained LLM Augmentation for Fake News Detection
+# HMA: Hardness-Aware Multi-style LLM Augmentation for Fake News Detection
 
-HMA is a difficulty-aware data augmentation framework for fake news
-detection. It (1) models per-sample classification difficulty, (2) decides
+HMA is a hardness-aware data augmentation framework for fake news
+detection. It (1) models per-sample classification hardness, (2) decides
 **whether** and **how strongly** to augment each hard sample via a two-stage
 gate, and (3) generates fine-grained, multi-style augmentations with an LLM,
 before re-training the final detector on the augmented set.
@@ -9,10 +9,10 @@ before re-training the final detector on the augmented set.
 ## Framework Overview
 
 ```
-                 ┌─────────────────────────── Stage A: Difficulty Modeling ───────────────────────────┐
+                 ┌─────────────────────────── Stage A: Hardness Modeling ───────────────────────────┐
   raw sample ──► │  3.1.1  Small-model uncertainty (RoBERTa)  ─► h_model                                │
                  │  3.1.2  LLM semantic complexity (Soft Prompt + Llama-3-8B)  ─► h_LLM                  │
-                 │  3.1.3  Gated fusion network  ─► h_x  (overall difficulty)                            │
+                 │  3.1.3  Gated fusion network  ─► h_x  (overall hardness)                            │
                  └───────────────────────────────────────────────────────────────────────────────────┘
                                                   │
                  ┌─────────────────────────── Stage B: Two-stage Gate ──────────────────────────────────┐
@@ -36,7 +36,7 @@ HMA/
 ├── .env.example                 # template for DEEPSEEK_API_KEY
 ├── .gitignore
 ├── src/
-│   ├── difficulty_modeling/
+│   ├── hardness_modeling/
 │   │   ├── small_model_hardness/
 │   │   │   └── compute_h_model.py        # 3.1.1  small-model uncertainty -> h_model
 │   │   ├── llm_hardness/
@@ -94,20 +94,20 @@ to wherever you store them. All paths in the configs are **placeholders**
 
 ## Quick Start
 
-### Stage A — Difficulty modeling
+### Stage A — Hardness modeling
 
 ```bash
 # 3.1.1 small-model uncertainty
-python src/difficulty_modeling/small_model_hardness/compute_h_model.py \
+python src/hardness_modeling/small_model_hardness/compute_h_model.py \
   --root . --dataset Constraint --model models/roberta-base
 
 # 3.1.2 LLM semantic complexity (run one or all datasets)
-python src/difficulty_modeling/llm_hardness/train_llm_hardness.py \
+python src/hardness_modeling/llm_hardness/train_llm_hardness.py \
   --config configs/llm_hardness/constraint.yaml
 bash scripts/run_llm_hardness_all.sh
 
 # 3.1.3 fusion -> h_x
-python src/difficulty_modeling/fusion/fusion_mlp.py --root . --dataset Constraint
+python src/hardness_modeling/fusion/fusion_mlp.py --root . --dataset Constraint
 ```
 
 ### Stage B — Two-stage gate
@@ -142,7 +142,7 @@ A single-dataset end-to-end example is in `scripts/run_pipeline_constraint.sh`.
 
 RoBERTa + Llama-3-8B + DeepSeek-R1, augmentation budget ρ = 0.2, virtual
 tokens = 60. Per-dataset hyper-parameters are in the YAML configs (see the
-table in `src/difficulty_modeling/llm_hardness/README.md`).
+table in `src/hardness_modeling/llm_hardness/README.md`).
 
 ## Security Note
 
