@@ -1,0 +1,37 @@
+# HMA 3.1.2 - Constraint (医学/COVID-19 方向)
+dataset:
+  name: Constraint - Llama-3-8B
+  data_dir: data/Constraint            # 占位符：替换为你的本地数据目录
+  result_dir: results/stage_a/llama3_8b_constraint
+  # Constraint 标签可能是 real/fake 字符串，需要映射
+  label_map: {real: 0, fake: 1, Real: 0, Fake: 1}
+
+model:
+  name: models/Meta-Llama-3-8B-Instruct  # 占位符：替换为你的本地模型路径
+  padding_side: left
+  dropout: 0.3
+  use_layernorm: false
+  use_dynamic_pooling: false
+
+training:
+  max_len: 128
+  batch_size: 4
+  grad_accum_steps: 8
+  epochs: 15
+  lr_prompt: 0.001
+  lr_head: 0.0001
+  pos_weight: 1.2
+
+soft_prompt:
+  num_virtual_tokens: 60
+  join_with: " "
+  # 末尾空格已保留（prefix 与维度之间需要空格）
+  prefix: "Task: Verify the medical claim based on evidence, science, emotion, and source: "
+  dimensions:
+    - "1. Medical Evidence: Check if claims cite medical authorities (WHO, CDC) or peer-reviewed studies."
+    - "2. Scientific Consensus: Identify conflicts with established scientific facts about virus transmission or cure."
+    - "3. Emotional Fear-Mongering: Detect panic-inducing language, conspiracy theories, or xenophobic undertones."
+    - "4. Source Credibility: Evaluate if the source is a verified health organization or an unverified blog."
+
+plot:
+  label_names: ["Real(0)", "Fake(1)"]

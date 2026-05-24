@@ -1,0 +1,16 @@
+# HMA 3.3 - Weibo 数据增强配置（中文 prompt + 安全熔断）
+# 注意：API Key 不在此处，请通过环境变量 DEEPSEEK_API_KEY 或 .env 提供
+api:
+  base_url: https://api.deepseek.com
+  model_name: deepseek-reasoner
+
+run:
+  max_workers: 10
+  retry_limit: 3
+
+prompts:
+  file: prompts/prompts_zh_weibo.json
+
+io:
+  input_file: data/stage2_gate/5-roberta-base+llama3-8b/Weibo_train_with_stage2_gate.xlsx
+  output_file: results/augmented/5-roberta-base+llama3-8b/Weibo_Augmented_Dataset_deepseek_R1.xlsx

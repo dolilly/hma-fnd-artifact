@@ -1,0 +1,34 @@
+# HMA 3.1.2 - PHEME (突发事件；右填充 + 动态池化 + LayerNorm + 加大 Prompt 学习率)
+dataset:
+  name: PHEME - Llama-3-8B
+  data_dir: data/PHEME
+  result_dir: results/stage_a/llama3_8b_pheme
+
+model:
+  name: models/Meta-Llama-3-8B-Instruct
+  padding_side: right          # PHEME 抢救修改 1：右填充
+  dropout: 0.2                 # PHEME 抢救修改 2：Dropout 降回 0.2
+  use_layernorm: true          # PHEME 抢救修改 2：评分头加 LayerNorm
+  use_dynamic_pooling: true    # PHEME 抢救修改 3：动态定位最后有效 token
+
+training:
+  max_len: 128
+  batch_size: 4
+  grad_accum_steps: 8
+  epochs: 15
+  lr_prompt: 0.01              # PHEME 抢救修改：加大 Prompt 学习率破除局部最优
+  lr_head: 0.0001
+  pos_weight: 2.0
+
+soft_prompt:
+  num_virtual_tokens: 60
+  join_with: " "
+  prefix: "Task: Verify the breaking news claim based on verification, source, emotion, and consistency: "
+  dimensions:
+    - "1. Event Verification: Check if the claim aligns with confirmed reports from official news outlets or authorities."
+    - "2. Source Authority: Assess if the user is a verified journalist, news agency, or an eyewitness vs. an anonymous account."
+    - "3. Emotional Intensity: Detect panic-inducing, sensationalist, or highly emotional language typical of unverified rumors."
+    - "4. Information Consistency: Identify contradictions with rapidly evolving facts or other eyewitness reports."
+
+plot:
+  label_names: ["Non-Rumor(0)", "Rumor(1)"]

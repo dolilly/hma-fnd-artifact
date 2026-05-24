@@ -1,0 +1,17 @@
+# HMA 3.3 - Constraint 数据增强配置
+# 注意：API Key 不在此处，请通过环境变量 DEEPSEEK_API_KEY 或 .env 提供
+api:
+  base_url: https://api.deepseek.com
+  model_name: deepseek-reasoner   # DeepSeek-R1 推理模型
+
+run:
+  max_workers: 10
+  retry_limit: 3
+
+prompts:
+  file: prompts/prompts_en_medical.json
+
+io:
+  # 占位符路径：替换为你本地的第二阶段门控输出 / 增强输出位置
+  input_file: data/stage2_gate/5-roberta-base+llama3-8b/Constraint_train_with_stage2_gate.xlsx
+  output_file: results/augmented/5-roberta-base+llama3-8b/Constraint_Augmented_Dataset_deepseek_R1.xlsx

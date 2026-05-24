@@ -1,0 +1,34 @@
+# HMA 3.1.2 - Weibo (中文四维度；标签已预反转 1=谣言 0=真话)
+dataset:
+  name: Weibo - Llama-3-8B
+  data_dir: data/Weibo
+  result_dir: results/stage_a/llama3_8b_weibo
+
+model:
+  name: models/Meta-Llama-3-8B-Instruct
+  padding_side: left
+  dropout: 0.3
+  use_layernorm: false
+  use_dynamic_pooling: false
+
+training:
+  max_len: 128
+  batch_size: 4
+  grad_accum_steps: 8
+  epochs: 15
+  lr_prompt: 0.001
+  lr_head: 0.0001
+  pos_weight: 1.5
+
+soft_prompt:
+  num_virtual_tokens: 60
+  join_with: ""                # 中文维度之间无分隔符
+  prefix: "任务：基于以下四个维度分析该微博内容的真实性与可信度："
+  dimensions:
+    - "1. 事实可信度：核实微博内容是否引用权威信源，是否存在夸大事实、伪造证据或传播被辟谣的信息。"
+    - "2. 逻辑连贯性：识别论证过程中的逻辑断裂、自相矛盾、强行因果关联或以偏概全的谬误。"
+    - "3. 情感与立场：分析发布者的主观情绪（如愤怒、煽动、恐慌）及潜在的舆论引导意图。"
+    - "4. 语言风格：捕捉非正式用语、网络俚语、标题党特征及情绪化的表达方式。"
+
+plot:
+  label_names: ["Non-Rumor(0)", "Rumor(1)"]

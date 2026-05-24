@@ -1,0 +1,27 @@
+{
+  "language": "en",
+  "expand_max_tokens": 150,
+  "min_output_len": 3,
+  "system_prompt": "You are a strict data augmentation assistant. You must output ONLY the generated text body. Do not output any conversational fillers (e.g., 'Sure', 'Here is'), do not use Markdown formatting, and do not include headers or tags. If the input is a short fragment, keep the output proportional.",
+  "prompts": {
+    "rewrite_light": "Please lightly rewrite the following news text. Instruction: Use different synonyms but keep the original meaning and sentence structure exactly the same. Constraint: Output ONLY the rewritten text. Keep length nearly identical to the original. Input News: '{text}'",
+    "rewrite_medium": "Please moderately rewrite the following news text. Instruction: Change the sentence structure (e.g., switch active/passive voice) and reorder clauses. Constraint: Do not increase the length. Output ONLY the text. Input News: '{text}'",
+    "rewrite_strong": "Please deeply rewrite the following news text. Instruction: Completely change the narrative order and vocabulary while keeping the core event recognizable. Constraint: CRITICAL: Even for deep rewrites, you MUST keep the result concise (max 1.2x original length). Do not write a summary or an article. Input News: '{text}'",
+    "expand_light": "Please lightly expand the following news text. Instruction: Add a tiny amount of detail (approx +10% length). Constraint: If the input is a short phrase (<10 words), just complete the sentence. Do not add more than 5 words. Input News: '{text}'",
+    "expand_medium": "Please moderately expand the following news text. Instruction: Add brief background context (approx +20-30% length). Constraint: CRITICAL: If the input is a short tag (e.g., 'On tax'), turn it into a single sentence, NOT a paragraph. Max length: 1.5x original. Input News: '{text}'",
+    "expand_strong": "Please deeply expand the following news text with context. Instruction: Add significant background details or plausible consequences. Constraint: Strict Limit: Maximum 3 sentences total. If original is under 20 words, output max 40 words. Do not write an essay. Input News: '{text}'",
+    "disguise_light": "Please lightly disguise the tone of this news text. Instruction: Make the tone slightly more neutral and objective. Constraint: Keep the text length exactly the same as the original. Input News: '{text}'",
+    "disguise_medium": "Please moderately disguise the tone of this news text. Instruction: Rewrite it to sound like a professional health journalist reporting. Remove any casual slang or emotion. Constraint: Keep it short and concise. Output ONLY the text. Input News: '{text}'",
+    "disguise_strong": "Please deeply disguise this text into a formal official announcement style. Instruction: Use bureaucratic language or a 'Public Health Advisory' style (e.g., use 'reported', 'confirmed cases'). Constraint: CRITICAL: Do not add headers like 'Official Report'. Keep it concise (max 60 words). Input News: '{text}'"
+  },
+  "clean_prefixes": [
+    "^official\\s+(notification|notice|report|announcement)\\s*[:\\-]*\\s*",
+    "^expanded\\s+(news|text|version)?\\s*[:\\-]*\\s*",
+    "^rewritten\\s+(news|text)?\\s*[:\\-]*\\s*",
+    "^breaking\\s*(news)?\\s*[:\\-]*\\s*",
+    "^here\\s+is\\s+the\\s+.*[:\\-]*\\s*",
+    "^sure\\s*[,!.]?\\s*",
+    "^certainly\\s*[,!.]?\\s*",
+    "^according\\s+to\\s+your\\s+request\\s*[:\\-]*\\s*"
+  ]
+}

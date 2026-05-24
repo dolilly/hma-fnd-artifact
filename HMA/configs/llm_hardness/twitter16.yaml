@@ -1,0 +1,34 @@
+# HMA 3.1.2 - Twitter16 (推文可信度；数据量小，强 Dropout 0.5)
+dataset:
+  name: Twitter16 - Llama-3-8B
+  data_dir: data/Twitter16
+  result_dir: results/stage_a/llama3_8b_twitter16
+
+model:
+  name: models/Meta-Llama-3-8B-Instruct
+  padding_side: left
+  dropout: 0.5                 # Twitter16 特调：强力正则化
+  use_layernorm: false
+  use_dynamic_pooling: false
+
+training:
+  max_len: 128
+  batch_size: 4
+  grad_accum_steps: 8
+  epochs: 15
+  lr_prompt: 0.001
+  lr_head: 0.0001
+  pos_weight: 2.0
+
+soft_prompt:
+  num_virtual_tokens: 60
+  join_with: " "
+  prefix: "Task: Analyze the tweet's credibility based on facts, logic, stance, and style: "
+  dimensions:
+    - "1. Factual Credibility: Detect rumor masking and reliance on external knowledge."
+    - "2. Reasoning Logic: Identify broken logical chains and incoherent argumentation."
+    - "3. Stance Ambiguity: Analyze the user's implicit opinion and emotional stance."
+    - "4. Linguistic Style: Capture informal slang, hashtags, and sensationlistic tone."
+
+plot:
+  label_names: ["Non-Rumor", "Rumor"]
